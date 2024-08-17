@@ -19,6 +19,7 @@ class CamelUpBoard:
         self.ticket_tents = {color:self.BETTING_TICKET_VALUES.copy() for color in self.camel_colors}
         self.dice_tents = [] #preserves order
 
+    
     def starting_camel_positions(self)->list[list[str]]:
         '''Places camels on the board at the beginning of the game
             TODO: randomize these positions
@@ -30,6 +31,7 @@ class CamelUpBoard:
         track[0] = list(self.camel_colors)
         random.shuffle(track[0])
         return track
+
     
     def print(self, players: list[CamelUpPlayer]):
         '''Prints the current state of the Camel Up board, including:
@@ -84,12 +86,14 @@ class CamelUpBoard:
         board_string+=player_string
         print(board_string+"\n")
 
+    
     def reset_tents(self):
         '''Rests dice tents and ticket tents at the end of a leg
         '''
         self.ticket_tents = {color:self.BETTING_TICKET_VALUES.copy() for color in self.camel_colors}
         self.dice_tents = []
 
+    
     def place_bet(self, color:str)->tuple[str, int]:
         '''Manages the board perspective when a player places a bet:
             - removes the top betting ticket (with highest value) from the appropriate Ticket Tent
@@ -108,6 +112,7 @@ class CamelUpBoard:
             self.ticket_tents[color] = tickets_left[1:]
         return ticket
 
+    
     def move_camel(self, die:tuple[str, int], verbose=False):
         '''Updates the track according to the die color and value
            The camel of the appropriate color moves the apporpriate number of spaces, 
@@ -120,7 +125,6 @@ class CamelUpBoard:
              list[list[str]] - a 2D list model of the Camel Up race track
         '''
         if verbose: print("Current track state:", self.track)
-        ### BEGIN SOLUTION
 
         camel_to_move = die[0]
         num_steps = die[1]
@@ -137,11 +141,9 @@ class CamelUpBoard:
         camels_to_move = self.track[camel_pos][camel_height:]
         self.track[camel_pos] = self.track[camel_pos][:camel_height]
         self.track[new_position].extend(camels_to_move)
-
-
-        ### END SOLUTION
         if verbose: print("Updated track state:", self.track)
         return self.track
+
     
     def shake_pyramid(self)->tuple[str, int]:
         '''Manages all the steps (from the board persepctive) involved with shaking the pyramid, 
@@ -154,7 +156,6 @@ class CamelUpBoard:
                 tuple[str, int] - A tuple representation of the rolled die
         '''
         rolled_die=("", 0)
-        ### BEGIN SOLUTION
 
         if not self.pyramid:
             return rolled_die
@@ -164,20 +165,18 @@ class CamelUpBoard:
         self.dice_tents.append((choose_color, die_value))
         rolled_die = (choose_color, die_value)
 
-        ### END SOLUTION
         return rolled_die
 
+    
     def is_leg_finished(self)->bool:
         '''Determines whether the leg of a race is finished
 
            Return
              bool - True if all dice have been rolled, False otherwise
         '''
-        ### BEGIN SOLUTION
 
         return len(self.pyramid) == 0
 
-        ### END SOLUTION
 
     def get_rankings(self):
         '''Determines first and second place camels on the track
@@ -186,7 +185,6 @@ class CamelUpBoard:
             tuple: a tuple of strings of (1st, 2nd) place camels: ('b', 'y') 
         '''
         rankings = ("", "")
-        ### BEGIN SOLUTION
         
         camel_order = []
         for position in reversed(self.track):
@@ -197,10 +195,9 @@ class CamelUpBoard:
         elif len(camel_order) == 1:
             rankings = (camel_order[0], "")
         
-
-        ### END SOLUTION
         return rankings
 
+    
     def get_all_dice_roll_sequences(self)-> set:
         '''
             Constructs a set of all possible roll sequences for the dice currently in the pyramid
@@ -211,7 +208,6 @@ class CamelUpBoard:
                                              that could result from shaking all dice from the pyramid
         ''' 
         roll_space = set()
-        ### BEGIN SOLUTION
         
         remaining_dice = list(self.pyramid)
         dice_combinations = []
@@ -220,12 +216,9 @@ class CamelUpBoard:
                 dice_combinations.append((color, value))
         all_sequences = product(dice_combinations, repeat=len(remaining_dice))
         for sequence in all_sequences:
-            roll_space.add(tuple(sequence))
-    
-        
-        ### END SOLUTION
-        
+            roll_space.add(tuple(sequence))        
         return roll_space
+
     
     def run_enumerative_leg_analysis(self)->dict[str, tuple[float, float]]:
         '''Conducts an enumerative analysis of the probability that each camel will win either 1st or 
@@ -251,7 +244,6 @@ class CamelUpBoard:
                 }
         '''
         win_percents = {color:(0, 0) for color in self.camel_colors}
-        ### BEGIN SOLUTION
 
         all_sequences = self.get_all_dice_roll_sequences()
         total_sequences = len(all_sequences)
@@ -269,8 +261,6 @@ class CamelUpBoard:
             first_count, second_count = counts[color]
             win_percents[color] = (first_count / total_sequences, second_count / total_sequences)
             
-        ### END SOLUTION
-
         return win_percents
 
 
@@ -302,7 +292,7 @@ class CamelUpBoard:
                 }
         '''
         win_percents={color:(0, 0) for color in self.camel_colors}
-        ### BEGIN SOLUTION
+
         pract = copy.deepcopy(self.track)
         keep = copy.deepcopy(self.dice_tents)
         pyr = self.pyramid
@@ -342,7 +332,6 @@ class CamelUpBoard:
         self.pyramid = pyr
         self.track = pract
         self.dice_tents = keep
-        ### END SOLUTION
         return win_percents
    
    
