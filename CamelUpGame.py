@@ -14,6 +14,7 @@ class CamelUpGame:
         }
         self.board = CamelUpBoard(self.CAMEL_STYLES)
         self.players =[CamelUpPlayer(p1_name), CamelUpPlayer(p2_name)]
+
     
     def get_player_move(self, player: CamelUpPlayer)->str:
         """Prompts the use to enter a valid menu choice:
@@ -25,6 +26,7 @@ class CamelUpGame:
         while choice.lower() not in ["b", "r"]:
             choice = input("(B)et or (R)oll? ").lower()
         return choice
+
     
     def print_AI_Advice(self):
         '''Prints both the enumerative and experimental probability of each camel coming in 
@@ -40,15 +42,15 @@ class CamelUpGame:
         
         return enum
 
+    
     def get_ticket_EV(self, ticket_value:int, prob_first:float, prob_second:float)->float:
         '''Caclulates the Expected Value of a ticket
         '''
         ev = 0
-        ### BEGIN SOLUTION
         ev = (prob_first*ticket_value)+(prob_second)+((1-(prob_first+prob_second))*-1)
-        ### END SOLUTION
         return ev
-    
+
+
     def get_player_bet(self, player:CamelUpPlayer)->str:
         '''Prompts a player to select an available betting ticket.
         '''
@@ -72,6 +74,7 @@ class CamelUpGame:
 
         return ticket_color.lower()
 
+    
     def play_1_leg(self):
         '''Alternatingly prompts each player to either Bet or Roll until all dice have been 
            placed on Dice Tents
@@ -91,6 +94,7 @@ class CamelUpGame:
                     player.add_bet(ticket)
             self.board.print(self.players)
             curr_player = (curr_player + 1) % 2
+
     
     def leg_payouts_and_results(self):
         '''Calculates and displays the final rankings for a race leg.
@@ -106,6 +110,7 @@ class CamelUpGame:
                     player.win_money(1) #second -> win $1
                 else:
                     player.pay_money(1) #second -> lose $1
+
 
 if __name__ == "__main__":
     # TODO: enter player names
